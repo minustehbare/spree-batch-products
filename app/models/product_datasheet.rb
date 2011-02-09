@@ -1,9 +1,7 @@
 class ProductDatasheet < ActiveRecord::Base
   require 'spreadsheet'
   
-  has_attached_file :xls, :path => ":rails_root/uploads/pricesheets/:id/:basename.:extension"  
-  
-  belongs_to :job, :class_name => "DelayedJob", :foreign_key => "job_id"
+  has_attached_file :xls, :path => ":rails_root/uploads/product_datasheets/:id/:basename.:extension"  
   
   validates_attachment_presence :xls
   validates_attachment_content_type :xls, :content_type => ['application/vnd.ms-excel','text/plain']
