@@ -1,0 +1,14 @@
+<%= render :partial => 'admin/shared/product_sub_menu' %>
+
+<div class='toolbar'>
+  <ul class='actions'>
+    <li id="new_product_datasheet_link">
+      <%= button_link_to t("new_product_datasheet"), new_admin_product_datasheet_path, {:remote => true, :icon => 'add'} %>
+    </li>
+  </ul>
+  <br class='clear' />
+</div>
+
+<h1><%= "#{t("actions.listing")} #{t("product_datasheets")}" %></h1>
+
+<div id="new_product_datasheet"></div>

@@ -1,4 +1,4 @@
-class ProductDatasheet < ActiveRecord::Base
+sclass ProductDatasheet < ActiveRecord::Base
   require 'spreadsheet'
   
   has_attached_file :xls, :path => ":rails_root/uploads/product_datasheets/:id/:basename.:extension"  
@@ -7,7 +7,7 @@ class ProductDatasheet < ActiveRecord::Base
   validates_attachment_content_type :xls, :content_type => ['application/vnd.ms-excel','text/plain']
   
   def path
-    "#{RAILS_ROOT}/uploads/pricesheets/#{self.id}/#{self.xls_file_name}"
+    "#{Rails.root}/uploads/product_datasheets/#{self.id}/#{self.xls_file_name}"
   end
   
   def process
@@ -26,6 +26,9 @@ class ProductDatasheet < ActiveRecord::Base
     end
     
     self.update_attribute('processed_at', Time.now)
+  end
+  
+  def upload
   end
   
 end
