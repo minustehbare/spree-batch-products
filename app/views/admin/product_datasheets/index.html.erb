@@ -12,3 +12,35 @@
 <h1><%= "#{t("actions.listing")} #{t("product_datasheets")}" %></h1>
 
 <div id="new_product_datasheet"></div>
+
+<table class="index">
+  <tr>
+    <%= hook :admin_product_datasheets_index_headers do %>
+      <th><%= t("datasheet_name") %></th>
+      <th><%= t("file_size") %></th>
+      <th><%= t("date_processed") %></th>
+    <% end %>
+    <th>
+      <%= hook :admin_product_datasheets_index_header_actions%>
+    </th>
+  </tr>
+<% @datasheets.each do |datasheet| %>
+  <tr <%= 'style="color:red;"' if !datasheet.processed? %> id="<%= dom_id datasheet %>">
+    <%- locals = {:datasheet => datasheet} %>
+    <%= hook :admin_product_datasheets_index_rows, locals do %>
+      <td><%= datasheet.xls_file_name %></td>
+      <td><%= datasheet.xls_file_size %></td>
+      <td><%= datasheet.processed_at %></td>
+    <% end %>
+    <td class="actions">
+      <%= hook :admin_product_datasheets_index_row_actions, locals do %>
+        <%= link_to_edit datasheet unless datasheet.processed?  %>
+        &nbsp;
+        <%= link_to_clone datasheet %>
+        &nbsp;
+        <%= link_to_delete datasheet unless datasheet.processed?  %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>  
+</table>

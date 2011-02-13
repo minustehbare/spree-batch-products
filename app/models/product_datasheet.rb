@@ -1,4 +1,4 @@
-sclass ProductDatasheet < ActiveRecord::Base
+class ProductDatasheet < ActiveRecord::Base
   require 'spreadsheet'
   
   has_attached_file :xls, :path => ":rails_root/uploads/product_datasheets/:id/:basename.:extension"  
@@ -28,7 +28,7 @@ sclass ProductDatasheet < ActiveRecord::Base
     self.update_attribute('processed_at', Time.now)
   end
   
-  def upload
+  def processed?
+    !self.processed_at.nil?
   end
-  
 end
