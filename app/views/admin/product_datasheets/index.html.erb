@@ -21,7 +21,7 @@
       <th><%= t("date_processed") %></th>
     <% end %>
     <th>
-      <%= hook :admin_product_datasheets_index_header_actions%>
+      <%= hook :admin_product_datasheets_index_header_actions %>
     </th>
   </tr>
 <% @datasheets.each do |datasheet| %>
@@ -29,16 +29,12 @@
     <%- locals = {:datasheet => datasheet} %>
     <%= hook :admin_product_datasheets_index_rows, locals do %>
       <td><%= datasheet.xls_file_name %></td>
-      <td><%= datasheet.xls_file_size %></td>
+      <td><%= number_to_human_size(datasheet.xls_file_size) %></td>
       <td><%= datasheet.processed_at %></td>
     <% end %>
     <td class="actions">
       <%= hook :admin_product_datasheets_index_row_actions, locals do %>
-        <%= link_to_edit datasheet unless datasheet.processed?  %>
-        &nbsp;
-        <%= link_to_clone datasheet %>
-        &nbsp;
-        <%= link_to_delete datasheet unless datasheet.processed?  %>
+        <%= link_to_delete datasheet, {:url => admin_product_datasheet_path(datasheet)} unless datasheet.deleted? or datasheet.processed?  %>
       <% end %>
     </td>
   </tr>

@@ -6,6 +6,9 @@ class ProductDatasheet < ActiveRecord::Base
   validates_attachment_presence :xls
   validates_attachment_content_type :xls, :content_type => ['application/vnd.ms-excel','text/plain']
   
+  scope :not_deleted, where("product_datasheets.deleted_at is NULL")
+  scope :deleted, where("product_datasheets.deleted_at is NOT NULL")
+  
   def path
     "#{Rails.root}/uploads/product_datasheets/#{self.id}/#{self.xls_file_name}"
   end
@@ -30,5 +33,9 @@ class ProductDatasheet < ActiveRecord::Base
   
   def processed?
     !self.processed_at.nil?
+  end
+  
+  def deleted?
+    !self.deleted_at.nil?
   end
 end
