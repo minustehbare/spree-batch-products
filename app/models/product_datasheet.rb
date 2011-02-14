@@ -23,7 +23,7 @@ class ProductDatasheet < ActiveRecord::Base
       for i in columns[0]..columns[1]
         attr_hash[headers[i]] = row[i] unless row[i].nil? or row[i].empty?
       end
-      Product.where("#{headers[0]}" => row[0]).all.each do |product|
+      Variant.where("#{headers[0]}" => row[0]).all.each do |product|
         product.update_attributes attr_hash
       end
     end

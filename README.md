@@ -1,7 +1,7 @@
 BatchProducts
 =============
 
-Introduction goes here.
+An extension aimed at providing the ability to update a large group of products through processing an uploaded spreadsheet.
 
 
 Example
