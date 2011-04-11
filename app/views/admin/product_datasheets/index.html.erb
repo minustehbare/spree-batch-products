@@ -28,9 +28,13 @@
   <tr <%= 'style="color:red;"' if !datasheet.processed? %> id="<%= dom_id datasheet %>">
     <%- locals = {:datasheet => datasheet} %>
     <%= hook :admin_product_datasheets_index_rows, locals do %>
-      <td><%= datasheet.xls_file_name %></td>
+      <td><%= link_to datasheet.xls_file_name, admin_product_datasheet_path(datasheet.id) %></td>
       <td><%= number_to_human_size(datasheet.xls_file_size) %></td>
-      <td><%= datasheet.processed_at %></td>
+      <% if datasheet.processed_at %>
+        <td><%= datasheet.processed_at %></td>
+      <% else %>
+        <td>Pending</td>
+      <% end %>
     <% end %>
     <td class="actions">
       <%= hook :admin_product_datasheets_index_row_actions, locals do %>
