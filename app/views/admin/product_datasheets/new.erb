@@ -1,0 +1,11 @@
+<%= render "shared/error_messages", :target => @product_datasheet %>
+
+<%= form_for(@product_datasheet,  :url => admin_product_datasheets_path, :html => { :multipart => true }) do |f| %>
+<fieldset>
+  <center>
+  <%= f.label t(:upload_a_product_datasheet) %>
+  <%= f.file_field :xls %>
+  <%= f.submit %>
+  </center>
+</fieldset>
+<% end %>

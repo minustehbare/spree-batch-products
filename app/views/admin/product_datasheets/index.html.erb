@@ -3,7 +3,7 @@
 <div class='toolbar'>
   <ul class='actions'>
     <li id="new_product_datasheet_link">
-      <%= button_link_to t("new_product_datasheet"), new_admin_product_datasheet_path, {:remote => true, :icon => 'add'} %>
+      <%= button_link_to t("upload_product_datasheet"), new_admin_product_datasheet_path, {:remote => true, :icon => 'add'} %>
     </li>
   </ul>
   <br class='clear' />
@@ -24,7 +24,7 @@
       <%= hook :admin_product_datasheets_index_header_actions %>
     </th>
   </tr>
-<% @datasheets.each do |datasheet| %>
+<% @product_datasheets.each do |datasheet| %>
   <tr <%= 'style="color:red;"' if !datasheet.processed? %> id="<%= dom_id datasheet %>">
     <%- locals = {:datasheet => datasheet} %>
     <%= hook :admin_product_datasheets_index_rows, locals do %>
