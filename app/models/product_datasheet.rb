@@ -23,7 +23,7 @@ class ProductDatasheet < ActiveRecord::Base
     @records_failed = 0
     @failed_queries = 0
     
-    worksheet.each do |row|
+    worksheet.each(1) do |row|
       attr_hash = {}
       for i in columns[0]..columns[1]
         attr_hash[headers[i]] = row[i] unless row[i].nil?
