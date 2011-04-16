@@ -23,17 +23,15 @@ class ProductDatasheet < ActiveRecord::Base
     @records_failed = 0
     @failed_queries = 0
     
-    #TODO possibly update iteration to allow for redefinition of attribute headers
-    # for product AND variant updates in the same datasheet
     worksheet.each do |row|
       attr_hash = {}
       for i in columns[0]..columns[1]
-        attr_hash[headers[i]] = row[i] unless row[i].nil?# or row[i].empty?
+        attr_hash[headers[i]] = row[i] unless row[i].nil?
       end
-      if Product.column_names.include?("#{headers[0]}")
-        process_products("#{headers[0]}", row[0], attr_hash)
-      elsif Variant.column_names.include?("#{headers[0]}")
-        process_variants("#{headers[0]}", row[0], attr_hash)
+      if Product.column_names.include?(headers[0])
+        process_products(headers[0], row[0], attr_hash)
+      elsif Variant.column_names.include?(headers[0])
+        process_variants(headers[0], row[0], attr_hash)
       else
         #TODO do something when the batch update for the row in question is invalid
         @failed_queries = @failed_queries + 1
@@ -48,8 +46,7 @@ class ProductDatasheet < ActiveRecord::Base
   end
   
   def process_products(key, value, attr_hash)
-    #TODO re-evaluate the scope call on Product
-    products_to_update = Product.not_deleted.where(key => value).all
+    products_to_update = Product.where(key => value).all
     @records_matched = @records_matched + products_to_update.size
     products_to_update.each { |product| 
                                         if product.update_attributes attr_hash 
@@ -60,8 +57,7 @@ class ProductDatasheet < ActiveRecord::Base
   end
   
   def process_variants(key, value, attr_hash)
-    #TODO re-evaluate the scope call on Variant
-    variants_to_update = Variant.not_deleted.where(key => value).all
+    variants_to_update = Variant.where(key => value).all
     @records_matched = @records_matched + variants_to_update.size
     variants_to_update.each { |variant| 
                                         if variant.update_attributes attr_hash
