@@ -18,32 +18,57 @@ class ProductDatasheet < ActiveRecord::Base
     worksheet = workbook.worksheet(0)
     columns = [worksheet.dimensions[2], worksheet.dimensions[3]]
     headers = worksheet.row(0)
+    @records_matched = 0
+    @records_updated = 0
+    @records_failed = 0
+    @failed_queries = 0
     
+    #TODO possibly update iteration to allow for redefinition of attribute headers
+    # for product AND variant updates in the same datasheet
     worksheet.each do |row|
       attr_hash = {}
       for i in columns[0]..columns[1]
         attr_hash[headers[i]] = row[i] unless row[i].nil?# or row[i].empty?
       end
-      if Product.has_attribute?("#{headers[0]}")
+      if Product.column_names.include?("#{headers[0]}")
         process_products("#{headers[0]}", row[0], attr_hash)
-      elsif Variant.has_attribute?("#{headers[0]}")
+      elsif Variant.column_names.include?("#{headers[0]}")
         process_variants("#{headers[0]}", row[0], attr_hash)
       else
         #TODO do something when the batch update for the row in question is invalid
+        @failed_queries = @failed_queries + 1
       end
     end
-    
-    self.update_attribute('processed_at', Time.now)
+    attr_hash = { :processed_at => Time.now, 
+                  :matched_records => @records_matched, 
+                  :failed_records => @records_failed, 
+                  :updated_records => @records_updated, 
+                  :failed_queries => @failed_queries }
+    self.update_attributes(attr_hash)
   end
   
   def process_products(key, value, attr_hash)
-    products_to_update = Products.not_deleted.where(key => value).all
-    products_to_update.each { |product| product.update_attributes attr_hash }
+    #TODO re-evaluate the scope call on Product
+    products_to_update = Product.not_deleted.where(key => value).all
+    @records_matched = @records_matched + products_to_update.size
+    products_to_update.each { |product| 
+                                        if product.update_attributes attr_hash 
+                                          @records_updated = @records_updated + 1
+                                        else
+                                          @records_failed = @records_failed + 1
+                                        end}
   end
   
   def process_variants(key, value, attr_hash)
-    variants_to_update = Variants.not_deleted.where(key => value).all
-    variants_to_update.each { |variant| variant.update_attributes attr_hash }
+    #TODO re-evaluate the scope call on Variant
+    variants_to_update = Variant.not_deleted.where(key => value).all
+    @records_matched = @records_matched + variants_to_update.size
+    variants_to_update.each { |variant| 
+                                        if variant.update_attributes attr_hash
+                                          @records_updated = @records_updated + 1
+                                        else
+                                          @records_failed = @records_failed + 1
+                                        end }
   end
   
   def processed?
