@@ -18,7 +18,7 @@ Example
 ProductDatasheets rely on two assumptions: the first row defines the attributes of the records you want to update, and the first cell of that row defines the attribute to search records by.
 
 Consider a simple datasheet:
-![](example/sample_spreadsheet.png)
+![](/minustehbare/spree-batch-products/raw/master/example/sample_spreadsheet.png)
 
 Notice that the first cell defines the search attribute as `:sku`.  Since this attribute is exclusive to the Variant model, it is a 'collection' of variants that we are updating.  The second attribute that is defined is `:price`.  
 
