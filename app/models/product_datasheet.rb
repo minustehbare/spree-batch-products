@@ -53,7 +53,8 @@ class ProductDatasheet < ActiveRecord::Base
                                           @records_updated = @records_updated + 1
                                         else
                                           @records_failed = @records_failed + 1
-                                        end}
+                                        end }
+    @failed_queries = @failed_queries + 1 if products_to_update.size == 0
   end
   
   def process_variants(key, value, attr_hash)
@@ -65,6 +66,7 @@ class ProductDatasheet < ActiveRecord::Base
                                         else
                                           @records_failed = @records_failed + 1
                                         end }
+    @failed_queries = @failed_queries + 1 if variants_to_update.size == 0
   end
   
   def processed?

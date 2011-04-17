@@ -41,7 +41,11 @@ class Admin::ProductDatasheetsController < Admin::BaseController
   def create
     @product_datasheet = ProductDatasheet.create(params[:product_datasheet])
     if @product_datasheet.xls.original_filename.end_with?(".xls") and @product_datasheet.save
-      Delayed::Job.enqueue(@product_datasheet)
+      if defined? Delayed::Job
+        Delayed::Job.enqueue(@product_datasheet)
+      else
+        @product_datasheet.perform
+      end
       flash.notice = I18n.t("notice_messages.product_datasheet_saved")
       redirect_to admin_product_datasheets_path
     else
