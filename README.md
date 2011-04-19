@@ -3,7 +3,7 @@ BatchProducts
 
 An extension aimed at providing the ability to update a large group of products through processing an uploaded spreadsheet.
 
-BatchProducts relies on paperclip to store attached excel spreadsheets for processing.  If DelayedJob is detected, the process of uploading a datasheet enqueues the datasheet for later processing.  If not, the datasheet is processed when it is uploaded.
+BatchProducts depends on the [](http://rubygems.org/gems/spreadsheet "Spreadsheet") gem to process uploaded excel files which are stored using Paperclip.  If DelayedJob is detected, the process of uploading a datasheet enqueues the datasheet for later processing.  If not, the datasheet is processed when it is uploaded.
 
 Each ProductDatasheet record has 4 integer fields that give a basic description of the datasheet's effectiveness:
 
