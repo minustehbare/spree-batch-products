@@ -28,7 +28,9 @@ class ProductDatasheet < ActiveRecord::Base
       for i in columns[0]..columns[1]
         attr_hash[headers[i]] = row[i] unless row[i].nil?
       end
-      if Product.column_names.include?(headers[0])
+      if headers[0] == 'id' and row[0].nil?
+        create_product(attr_hash)
+      elsif Product.column_names.include?(headers[0])
         process_products(headers[0], row[0], attr_hash)
       elsif Variant.column_names.include?(headers[0])
         process_variants(headers[0], row[0], attr_hash)
@@ -43,6 +45,11 @@ class ProductDatasheet < ActiveRecord::Base
                   :updated_records => @records_updated, 
                   :failed_queries => @failed_queries }
     self.update_attributes(attr_hash)
+  end
+  
+  def create_product(attr_hash)
+    new_product = Product.new(attr_hash)
+    @failed_queries = @failed_queries + 1 if not new_product.save
   end
   
   def process_products(key, value, attr_hash)
