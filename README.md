@@ -1,7 +1,7 @@
 BatchProducts
 =============
 
-An extension aimed at providing the ability to update a large group of products through processing an uploaded spreadsheet.
+An extension aimed at providing the ability to create Product records and update collections of Products or Variants.
 
 BatchProducts depends on the [Spreadsheet](http://rubygems.org/gems/spreadsheet "Spreadsheet") gem to process uploaded excel files which are stored using Paperclip.  If DelayedJob is detected, the process of uploading a datasheet enqueues the datasheet for later processing.  If not, the datasheet is processed when it is uploaded.
 
@@ -29,5 +29,14 @@ The second row and on define the 'queries' that are executed to retrieve a colle
 
 If a query returns no records, or if the search attribute does not belong to Variant or Product attributes then it is reported as 'failed'.  Any records matched by the query are added to the `:matched_records` attribute of the datasheet.  Records that have a `true` return on the `#update_attributes(attr_hash)` call are added to the `:updated_records` attribute and those that have a `false` return are added to the `:failed_records` attribute.
 
+Record Creation
+---------------
+
+To create Product records through a ProductDatasheet the first row must define `:id` as the search attribute.  Each row should have an empty value for the `:id` column otherwise Product records will be located by the value supplied.  Record creation succeeds so long as the `:name`, `:permalink`, and `:price` attributes on each row are defined.
+
+Record Updating
+---------------
+
+Updating collections of records follows similarly from the example.  Updating Product collections requires a search attribute that is present as an attribute column on the Products table in the database; the same is true for Variant collections.  Attributes with empty value cells are not included in the attributes hash to update the record.
 
 Copyright (c) 2011 minustehbare, released under the New BSD License
