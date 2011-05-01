@@ -1,4 +1,4 @@
-namespace :batch_products do
+namespace :spree_batch_products do
   desc "Copies all migrations and assets (NOTE: This will be obsolete with Rails 3.1)"
   task :install do
     Rake::Task['batch_products:install:migrations'].invoke
