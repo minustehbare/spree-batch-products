@@ -1,0 +1,14 @@
+en:
+  batch_updates: "Batch Updates"
+  product_datasheets: "Product Datasheets"
+  new_product_datasheet: "New Product Datasheet"
+  datasheet_name: "Datasheet Name"
+  file_size: "File Size"
+  date_processed: "Date Processed"
+  product_datasheet: "Product Datasheet"
+  actions:
+    upload: "Upload"
+  upload_product_datasheet: "Upload Product Datasheet"
+  upload_a_product_datasheet: "Upload a Product Datasheet"
+  notice_messages:
+    product_datasheet_saved: "Product Datasheet Saved"
