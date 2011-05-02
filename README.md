@@ -16,7 +16,7 @@ Installation
 ============
 
 To incorporate the BatchProducts extension into your Spree application, add the following to your gemfile:
-`gem 'spree_batch_products', :git => 'git://github.com/minustehbare/spree-batch-products.git'
+`gem 'spree_batch_products', :git => 'git://github.com/minustehbare/spree-batch-products.git'`
 
 Follow it up with a `bundle install`.
 
