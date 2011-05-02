@@ -12,6 +12,20 @@ Each ProductDatasheet record has 4 integer fields that give a basic description 
 * `:failed_records =>` sum of all records that had a 'false' return when saved
 * `:failed_queries =>` number of rows that matched no Product or Variant records
 
+Installation
+============
+
+To incorporate the BatchProducts extension into your Spree application, add the following to your gemfile:
+`gem 'spree_batch_products', :git => 'git://github.com/minustehbare/spree-batch-products.git'
+
+Follow it up with a `bundle install`.
+
+When your bundle has finished, mirror the assets and migrations into your migrations folder with `rake spree_batch_products:install` and then run `rake db:migrate`.  This will create the ProductDatasheet(s) model and database table along with the handy statistic fields listed above.
+
+If you are using DelayedJob, the Jobs table should already be created, or it will be created when you install DelayedJob.
+
+Having done these things, you can log into the admin interface of your application and click on the 'Products' tab.  Listed as a sub-tab you'll see 'Batch Updates'.  This is where you can upload a new spreadsheet for processing or view existing spreadsheets that have already been completed or are pending to be processed.
+
 Example
 =======
 
