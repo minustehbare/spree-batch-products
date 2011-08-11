@@ -13,6 +13,12 @@ class ProductDatasheet < ActiveRecord::Base
     "#{Rails.root}/uploads/product_datasheets/#{self.id}/#{self.xls_file_name}"
   end
   
+  ####################
+  # Main logic of extension
+  # Uses the spreadsheet to define the bounds for iteration (from first used column <inclusive> to first unused column <exclusive>)
+  # Sets up statistic variables and separates the headers row from the rest of the spreadsheet
+  # Iterates row-by-row to populate a hash of { :attribute => :value } pairs, uses this hash to create or update records accordingly
+  ####################
   def perform
     workbook = Spreadsheet.open self.path
     worksheet = workbook.worksheet(0)
@@ -23,19 +29,37 @@ class ProductDatasheet < ActiveRecord::Base
     @records_failed = 0
     @failed_queries = 0
     
+    ####################
+    # Creating Variants:
+    #   1) First cell of headers row must define 'id' as the search key
+    #   2) The headers row must define 'product_id' as an attribute to be updated
+    #   3) The row containing the values must leave 'id' blank, and define a valid id for 'product_id'
+    #
+    # Creating Products:
+    #   1) First cell of headers row must define 'id' as the search key
+    #   2) The row containing the values must leave 'id' blank, and define a valid id for 'product_id'
+    #
+    # Updating Products:
+    #   1) The search key (first cell of headers row) must be present as a column name on the Products table
+    #
+    # Updating Variants:
+    #   1) The search key must be present as a column name on the Variants table.
+    ####################
     worksheet.each(1) do |row|
       attr_hash = {}
       for i in columns[0]..columns[1]
         attr_hash[headers[i]] = row[i] unless row[i].nil?
       end
-      if headers[0] == 'id' and row[0].nil?
+      puts headers.to_s
+      if headers[0] == 'id' and row[0].nil? and headers.include? 'product_id'
+        create_variant(attr_hash)
+      elsif headers[0] == 'id' and row[0].nil?
         create_product(attr_hash)
       elsif Product.column_names.include?(headers[0])
         process_products(headers[0], row[0], attr_hash)
       elsif Variant.column_names.include?(headers[0])
         process_variants(headers[0], row[0], attr_hash)
       else
-        #TODO do something when the batch update for the row in question is invalid
         @failed_queries = @failed_queries + 1
       end
     end
@@ -50,6 +74,11 @@ class ProductDatasheet < ActiveRecord::Base
   def create_product(attr_hash)
     new_product = Product.new(attr_hash)
     @failed_queries = @failed_queries + 1 if not new_product.save
+  end
+  
+  def create_variant(attr_hash)
+    new_variant = Variant.new(attr_hash)
+    @failed_queries = @failed_queries + 1 if not new_variant.save
   end
   
   def process_products(key, value, attr_hash)
