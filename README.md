@@ -15,8 +15,10 @@ Each ProductDatasheet record has 4 integer fields that give a basic description 
 Installation
 ============
 
-To incorporate the BatchProducts extension into your Spree application, add the following to your gemfile:
+To incorporate the BatchProducts extension into your Spree application, add the following to your Gemfile:
 `gem 'spree_batch_products', :git => 'git://github.com/minustehbare/spree-batch-products.git'`
+
+There are a number of different branches corresponding to different Spree versions.  The extension does not change much between branches other than the spree-core dependency.  Use the `:branch => <branch name>` directive if you are not working with edge Spree and instead are using an older version.
 
 Follow it up with a `bundle install`.
 
@@ -46,11 +48,18 @@ If a query returns no records, or if the search attribute does not belong to Var
 Record Creation
 ---------------
 
-To create Product records through a ProductDatasheet the first row must define `:id` as the search attribute.  Each row should have an empty value for the `:id` column otherwise Product records will be located by the value supplied.  Record creation succeeds so long as the `:name`, `:permalink`, and `:price` attributes on each row are defined.
+To create Product records through a ProductDatasheet the first row must define `:id` as the search attribute.  Any row that you want a record created for should have an empty value for the `:id` column; otherwise, Product records will be located by the value supplied.  Record creation succeeds so long as the `:name`, `:permalink`, and `:price` attributes on each row are defined.
+
+To create Variant records, follow the same style as creating a Product.  Define `:id` as the search attribute, leave the value cell of the `:id` column empty to create a record for that row, and ensure that you supply values for `:price` and `:product_id`.  This will create Variant records and save them.  The use-case for this is very limited since the distinguishing feature of Variant records are OptionTypes and OptionValues.  For simplicity, those details are left to be done programatically because of the complexity that record linking introduces.
 
 Record Updating
 ---------------
 
 Updating collections of records follows similarly from the example.  Updating Product collections requires a search attribute that is present as an attribute column on the Products table in the database; the same is true for Variant collections.  Attributes with empty value cells are not included in the attributes hash to update the record.
+
+Questions?
+----------
+
+README's can't cover everything, message me about any questions or features you need clarification on.
 
 Copyright (c) 2011 minustehbare, released under the New BSD License
