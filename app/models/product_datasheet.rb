@@ -20,7 +20,7 @@ class ProductDatasheet < ActiveRecord::Base
   # Iterates row-by-row to populate a hash of { :attribute => :value } pairs, uses this hash to create or update records accordingly
   ####################
   def perform
-    workbook = Spreadsheet.open self.path
+    workbook = Spreadsheet.open self.xls.to_file
     worksheet = workbook.worksheet(0)
     columns = [worksheet.dimensions[2], worksheet.dimensions[3]]
     headers = worksheet.row(0)
