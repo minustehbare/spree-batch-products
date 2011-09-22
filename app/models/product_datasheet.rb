@@ -71,7 +71,7 @@ class ProductDatasheet < ActiveRecord::Base
         @queries_failed = @queries_failed + 1
       end
     end
-    self.update_attribute(:processed_at => Time.now)
+    self.update_attribute(:processed_at, Time.now)
   end
   
   def create_product(attr_hash)
