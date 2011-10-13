@@ -38,6 +38,14 @@ class ProductDatasheet < ActiveRecord::Base
     columns = [worksheet.dimensions[2], worksheet.dimensions[3]]
     headers = worksheet.row(0)
     
+    headers.collect! do |key|
+      if Product.column_names.include?(key) or Variant.column_names.include?(key)
+        key
+      else
+        nil
+      end
+    end
+    
     ####################
     # Creating Variants:
     #   1) First cell of headers row must define 'id' as the search key
@@ -57,7 +65,7 @@ class ProductDatasheet < ActiveRecord::Base
     worksheet.each(1) do |row|
       attr_hash = {}
       for i in columns[0]..columns[1]
-        attr_hash[headers[i]] = row[i] unless row[i].nil?
+        attr_hash[headers[i]] = row[i] if row[i] and headers[i] # if there is a value and a key
       end
       if headers[0] == 'id' and row[0].nil? and headers.include? 'product_id'
         create_variant(attr_hash)

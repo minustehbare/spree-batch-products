@@ -27,7 +27,7 @@ class Admin::ProductDatasheetsController < Admin::BaseController
     else
       @product_datasheet.errors.add_to_base('Failed to delete the product datasheet')
     end
-    redirect_to admin_product_datasheets_path
+    redirect_to admin_product_datasheets_path(:format => :html)
   end
   
   def clone
