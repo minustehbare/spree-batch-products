@@ -36,13 +36,15 @@ class ProductDatasheet < ActiveRecord::Base
     end
     worksheet = workbook.worksheet(0)
     columns = [worksheet.dimensions[2], worksheet.dimensions[3]]
-    headers = worksheet.row(0)
+    header_row = worksheet.row(0)
     
-    headers.collect! do |key|
+    headers = []
+    
+    header_row.each do |key|
       if Product.column_names.include?(key) or Variant.column_names.include?(key)
-        key
+        headers << key
       else
-        nil
+        headers << nil
       end
     end
     
@@ -65,7 +67,7 @@ class ProductDatasheet < ActiveRecord::Base
     worksheet.each(1) do |row|
       attr_hash = {}
       for i in columns[0]..columns[1]
-        attr_hash[headers[i]] = row[i] if row[i] and headers[i] # if there is a value and a key
+        attr_hash[headers[i]] = row[i].to_s if row[i] and headers[i] # if there is a value and a key; .to_s is important for ARel
       end
       if headers[0] == 'id' and row[0].nil? and headers.include? 'product_id'
         create_variant(attr_hash)
