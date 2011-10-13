@@ -38,8 +38,12 @@ class ProductDatasheet < ActiveRecord::Base
     columns = [worksheet.dimensions[2], worksheet.dimensions[3]]
     headers = worksheet.row(0)
     
-    headers.reject! do |key|
-      !Product.column_names.include?(key) && !Variant.column_names.include?(key)
+    headers.collect! do |key|
+      if Product.column_names.include?(key) or Variant.column_names.include?(key)
+        key
+      else
+        nil
+      end
     end
     
     ####################
